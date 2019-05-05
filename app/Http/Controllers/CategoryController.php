@@ -54,7 +54,7 @@ class CategoryController extends Controller
     public function show(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        // check if currently authenticated user is the owner of the leave
+        // check if currently authenticated user is the owner of the category
         if ($request->auth->id != $category->user_id) {
             return response()->json(['error' => 'You can only view your own categories.'], 403);
         }
@@ -71,64 +71,46 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the leave
-        if ($request->user()->id != $leaf->user_id) {
-            return response()->json(['error' => 'You can only edit your own leaves.'], 403);
+        // check if currently authenticated user is the owner of the category
+        $category = Category::findOrFail($id);
+        if ($request->auth->id != $category->user_id) {
+            return response()->json(['error' => 'You can only edit your own categories.'], 403);
         }
 
-        if (isset($request->from)) {
-            $from = DateTime::createFromFormat('Y-m-d', $request->from);
-            if ($from) {
-                $from->setTime(0, 0, 0);
-                $leaf->from = $request->from;
+        if ($request->has("category")) {
+            $exist = Category::where("category", $request->category)->first();
+            if (!empty($exist)) {
+                return response()->json(['error' => 'Category with same name already exist'], 422);
             } else {
-                return response()->json(['error' => 'From and Until dates must be in Y-m-d format'], 422);
+                $category->category = $request->category;
             }
-        } else {
-            $from = DateTime::createFromFormat('Y-m-d', $leaf->from);
         }
 
-        if (isset($request->until)) {
-            $until = DateTime::createFromFormat('Y-m-d', $request->until);
-            if ($until) {
-                $until->setTime(0, 0, 0);
-                $leaf->until = $request->until;
-            } else {
-                return response()->json(['error' => 'From and Until dates must be in Y-m-d format'], 422);
-            }
-        } else {
-            $until = DateTime::createFromFormat('Y-m-d', $leaf->until);
+        if ($request->has("count")) {
+            $category->count = $request->count;
         }
 
-        if ($from > $until) {
-            return response()->json(['error' => 'From can not be greater than Until date'], 422);
-        }
+        $category->save();
 
-        if (isset($request->from) || isset($request->until)) {
-            $leaf->days = WorkingDays::calculateWorkingDays($from, $until);
-        }
-
-        $leaf->save();
-
-        return new LeaveResource($leaf);
+        return new CategoryResource($category);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param Leave $leaf
+     * @param $id
      * @return \Illuminate\Http\Response
-     * @throws \Exception
      */
-    public function destroy(Request $request, Leave $leaf)
+    public function destroy(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the leave
-        if ($request->user()->id != $leaf->user_id) {
-            return response()->json(['error' => 'You can only delete your own leaves.'], 403);
+        // check if currently authenticated user is the owner of the category
+        $category = Category::findOrFail($id);
+        if ($request->auth->id != $category->user_id) {
+            return response()->json(['error' => 'You can only delete your own category.'], 403);
         }
 
-        $leaf->delete();
+        $category->delete();
 
         return response()->json(null, 204);
     }
