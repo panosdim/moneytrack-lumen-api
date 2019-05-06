@@ -33,9 +33,9 @@ class CategoryController extends Controller
                 return response()->json(['error' => 'Category with same name already exist'], 422);
             }
             $category = Category::create([
-                'user_id' => $request->auth->id,
+                'user_id'  => $request->auth->id,
                 'category' => $request->category,
-                'count' => 0,
+                'count'    => 0,
             ]);
 
             return new CategoryResource($category);

@@ -53,7 +53,7 @@ class AuthController extends BaseController
     public function authenticate(User $user)
     {
         $this->validate($this->request, [
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
         // Find the user by email
