@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Income extends Model
 {
-    protected $fillable = ['category', 'count', 'user_id'];
+    protected $fillable = ['amount', 'comment', 'date', 'user_id'];
     public $timestamps  = false;
+    public $table       = "income";
 
     public function user()
     {

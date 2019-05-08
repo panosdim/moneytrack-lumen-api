@@ -15,17 +15,19 @@ $router->get('/', function () use ($router) {
     return response()->json(["version" => "1.0"]);
 });
 
-$router->post(
-    'login', ['uses' => 'AuthController@authenticate']
-);
+$router->post('login', ['uses' => 'AuthController@authenticate']);
+
+$router->post('register', ['uses' => 'AuthController@register']);
 
 $router->group(
     ['middleware' => 'jwt.auth'],
     function () use ($router) {
+        // User Info
         $router->get('user', function (Request $request) {
             return response()->json($request->auth);
         });
 
+        // Category API
         $router->group([
             'prefix' => '/category',
         ], function () use ($router) {
@@ -34,6 +36,17 @@ $router->group(
             $router->get('/{id:[\d]+}', 'CategoryController@show');
             $router->put('/{id:[\d]+}', 'CategoryController@update');
             $router->delete('/{id:[\d]+}', 'CategoryController@destroy');
+        });
+
+        // Income API
+        $router->group([
+            'prefix' => '/income',
+        ], function () use ($router) {
+            $router->get('/', 'IncomeController@index');
+            $router->post('/', 'IncomeController@store');
+            $router->get('/{id:[\d]+}', 'IncomeController@show');
+            $router->put('/{id:[\d]+}', 'IncomeController@update');
+            $router->delete('/{id:[\d]+}', 'IncomeController@destroy');
         });
     }
 );

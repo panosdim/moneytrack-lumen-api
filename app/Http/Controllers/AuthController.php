@@ -78,4 +78,41 @@ class AuthController extends BaseController
             'error' => 'Email or password is wrong.',
         ], 400);
     }
+
+    public function register()
+    {
+        $this->validate($this->request, [
+            'username'  => 'required',
+            'email'     => 'required|email',
+            'password'  => 'required',
+            'firstName' => 'required',
+            'lastName'  => 'required',
+        ]);
+
+        // Find the user by email
+        $user = User::where('email', $this->request->input('email'))->first();
+        if ($user) {
+            return response()->json([
+                'error' => 'User with same Email already exists.',
+            ], 422);
+        }
+
+        // Find the user by username
+        $user = User::where('username', $this->request->input('username'))->first();
+        if ($user) {
+            return response()->json([
+                'error' => 'User with same username already exists.',
+            ], 422);
+        }
+
+        $user = User::create([
+            'username'   => $this->request->username,
+            'email'      => $this->request->email,
+            'password'   => Hash::make($this->request->password),
+            'first_name' => $this->request->firstName,
+            'last_name'  => $this->request->lastName,
+        ]);
+
+        return response()->json($user, 201);
+    }
 }
