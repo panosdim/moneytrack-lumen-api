@@ -28,7 +28,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         if ($request->has("category")) {
-            $exist = Category::where("category", $request->category)->first();
+            $exist = Category::where("category", $request->category)->where("user_id", $request->auth->id)->first();
             if (!empty($exist)) {
                 return response()->json(['error' => 'Category with same name already exist'], 422);
             }
@@ -78,7 +78,7 @@ class CategoryController extends Controller
         }
 
         if ($request->has("category")) {
-            $exist = Category::where("category", $request->category)->first();
+            $exist = Category::where("category", $request->category)->where("user_id", $request->auth->id)->first();
             if (!empty($exist)) {
                 return response()->json(['error' => 'Category with same name already exist'], 422);
             } else {

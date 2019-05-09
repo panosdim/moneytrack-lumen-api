@@ -27,10 +27,10 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        validate($request, [
+        $this->validate($request, [
             'amount'  => 'required|numeric',
             'comment' => 'required',
-            'date'    => 'required|date',
+            'date'    => 'required|date|date_format:Y-m-d',
         ]);
 
         $income = Income::create([
