@@ -53,7 +53,7 @@ class IncomeController extends Controller
     public function show(Request $request, $id)
     {
         $income = Income::findOrFail($id);
-        // check if currently authenticated user is the owner of the Income
+        // Check if currently authenticated user is the owner of the Income
         if ($request->auth->id != $income->user_id) {
             return response()->json(['error' => 'You can only view your own Income.'], 403);
         }
@@ -70,7 +70,12 @@ class IncomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the Income
+        $this->validate($request, [
+            'amount' => 'numeric',
+            'date'   => 'date|date_format:Y-m-d',
+        ]);
+
+        // Check if currently authenticated user is the owner of the Income
         $income = Income::findOrFail($id);
         if ($request->auth->id != $income->user_id) {
             return response()->json(['error' => 'You can only edit your own Income.'], 403);
@@ -102,7 +107,7 @@ class IncomeController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the Income
+        // Check if currently authenticated user is the owner of the Income
         $income = Income::findOrFail($id);
         if ($request->auth->id != $income->user_id) {
             return response()->json(['error' => 'You can only delete your own Income.'], 403);

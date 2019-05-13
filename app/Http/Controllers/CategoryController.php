@@ -54,7 +54,7 @@ class CategoryController extends Controller
     public function show(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        // check if currently authenticated user is the owner of the category
+        // Check if currently authenticated user is the owner of the category
         if ($request->auth->id != $category->user_id) {
             return response()->json(['error' => 'You can only view your own categories.'], 403);
         }
@@ -71,7 +71,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the category
+        // Check if currently authenticated user is the owner of the category
         $category = Category::findOrFail($id);
         if ($request->auth->id != $category->user_id) {
             return response()->json(['error' => 'You can only edit your own categories.'], 403);
@@ -104,10 +104,18 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        // check if currently authenticated user is the owner of the category
+        // Check if currently authenticated user is the owner of the category
         $category = Category::findOrFail($id);
         if ($request->auth->id != $category->user_id) {
             return response()->json(['error' => 'You can only delete your own category.'], 403);
+        }
+
+        // Check if category is connected with expenses
+        $expense = Expense::where("category", $id)->where("user_id", $request->auth->id)->first();
+        if (!empty($expense)) {
+            return response()->json([
+                'error' => "Category is connected with one or more Expense and can't be deleted."
+            ], 409);
         }
 
         $category->delete();
