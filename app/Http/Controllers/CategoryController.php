@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Expense;
 use App\Category;
-use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {

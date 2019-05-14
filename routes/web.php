@@ -48,5 +48,16 @@ $router->group(
             $router->put('/{id:[\d]+}', 'IncomeController@update');
             $router->delete('/{id:[\d]+}', 'IncomeController@destroy');
         });
+
+        // Expense API
+        $router->group([
+            'prefix' => '/expense',
+        ], function () use ($router) {
+            $router->get('/', 'ExpenseController@index');
+            $router->post('/', 'ExpenseController@store');
+            $router->get('/{id:[\d]+}', 'ExpenseController@show');
+            $router->put('/{id:[\d]+}', 'ExpenseController@update');
+            $router->delete('/{id:[\d]+}', 'ExpenseController@destroy');
+        });
     }
 );

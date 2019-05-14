@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Expense;
 use App\Http\Resources\ExpenseResource;
 use Illuminate\Http\Request;
@@ -30,10 +31,16 @@ class ExpenseController extends Controller
     {
         $this->validate($request, [
             'amount'   => 'required|numeric',
-            'category' => 'required|exists:categories,id',
+            'category' => 'required|numeric|exists:categories,id',
             'comment'  => 'required',
             'date'     => 'required|date|date_format:Y-m-d',
         ]);
+
+        // Check if Category belong to user
+        $category = Category::where("id", $request->category)->first();
+        if ($request->auth->id != $category->user_id) {
+            return response()->json(['error' => 'Category belong to another user.'], 403);
+        }
 
         $expense = Expense::create([
             'user_id'  => $request->auth->id,
@@ -44,7 +51,6 @@ class ExpenseController extends Controller
         ]);
 
         // Increase the count in category
-        $category        = Category::where("id", $request->category)->first();
         $category->count = $category->count + 1;
         $category->save();
 
@@ -80,7 +86,7 @@ class ExpenseController extends Controller
     {
         $this->validate($request, [
             'amount'   => 'numeric',
-            'category' => 'number|exists:categories,id',
+            'category' => 'numeric|exists:categories,id',
             'date'     => 'date|date_format:Y-m-d',
         ]);
 
@@ -103,7 +109,12 @@ class ExpenseController extends Controller
         }
 
         if ($request->has("category")) {
-            $expense->date = $request->category;
+            // Check if Category belong to user
+            $category = Category::where("id", $request->category)->first();
+            if ($request->auth->id != $category->user_id) {
+                return response()->json(['error' => 'Category belong to another user.'], 403);
+            }
+            $expense->category = $request->category;
         }
 
         $expense->save();
