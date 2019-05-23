@@ -29,14 +29,13 @@ class IncomeController extends Controller
     {
         $this->validate($request, [
             'amount'  => 'required|numeric',
-            'comment' => 'required',
             'date'    => 'required|date|date_format:Y-m-d',
         ]);
 
         $income = Income::create([
             'user_id' => $request->auth->id,
             'amount'  => $request->amount,
-            'comment' => $request->comment,
+            'comment' => $request->comment ? $request->comment : '',
             'date'    => $request->date,
         ]);
 
