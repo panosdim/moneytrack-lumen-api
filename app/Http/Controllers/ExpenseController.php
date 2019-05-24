@@ -17,7 +17,10 @@ class ExpenseController extends Controller
      */
     public function index(Request $request)
     {
-        return ExpenseResource::collection(Expense::where("user_id", $request->auth->id)
+        // Get last 3 years expenses
+        $lastThreeYears = date('Y-01-01', strtotime('-3 year'));
+        return ExpenseResource::collection(Expense::where('user_id', $request->auth->id)
+                ->whereDate('date', '>=', $lastThreeYears)
                 ->orderBy('date', 'desc')->get());
     }
 
@@ -37,7 +40,7 @@ class ExpenseController extends Controller
         ]);
 
         // Check if Category belong to user
-        $category = Category::where("id", $request->category)->first();
+        $category = Category::where('id', $request->category)->first();
         if ($request->auth->id != $category->user_id) {
             return response()->json(['error' => 'Category belong to another user.'], 403);
         }

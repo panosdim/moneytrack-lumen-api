@@ -16,7 +16,11 @@ class IncomeController extends Controller
      */
     public function index(Request $request)
     {
-        return IncomeResource::collection(Income::where("user_id", $request->auth->id)->orderBy('date', 'desc')->get());
+        // Get last 3 years income
+        $lastThreeYears = date('Y-01-01', strtotime('-3 year'));
+        return IncomeResource::collection(Income::where("user_id", $request->auth->id)
+                ->whereDate('date', '>=', $lastThreeYears)
+                ->orderBy('date', 'desc')->get());
     }
 
     /**
@@ -28,8 +32,8 @@ class IncomeController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'amount'  => 'required|numeric',
-            'date'    => 'required|date|date_format:Y-m-d',
+            'amount' => 'required|numeric',
+            'date'   => 'required|date|date_format:Y-m-d',
         ]);
 
         $income = Income::create([
