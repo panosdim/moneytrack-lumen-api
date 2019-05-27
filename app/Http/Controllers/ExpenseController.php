@@ -35,7 +35,6 @@ class ExpenseController extends Controller
         $this->validate($request, [
             'amount'   => 'required|numeric',
             'category' => 'required|numeric|exists:categories,id',
-            'comment'  => 'required',
             'date'     => 'required|date|date_format:Y-m-d',
         ]);
 
@@ -49,7 +48,7 @@ class ExpenseController extends Controller
             'user_id'  => $request->auth->id,
             'amount'   => $request->amount,
             'category' => $request->category,
-            'comment'  => $request->comment,
+            'comment'  => $request->comment ? $request->comment : '',
             'date'     => $request->date,
         ]);
 
