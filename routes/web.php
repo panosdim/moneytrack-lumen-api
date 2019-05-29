@@ -17,6 +17,7 @@ $router->get('/', function () use ($router) {
 
 $router->post('login', ['uses' => 'AuthController@authenticate']);
 
+// TODO: Remove register route in production
 $router->post('register', ['uses' => 'AuthController@register']);
 
 $router->group(
