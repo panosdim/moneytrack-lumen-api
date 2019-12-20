@@ -1,10 +1,15 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers;
 
 use App\Http\Resources\IncomeResource;
 use App\Income;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class IncomeController extends Controller
 {
@@ -12,7 +17,7 @@ class IncomeController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return IncomeResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -26,8 +31,9 @@ class IncomeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      * @return IncomeResource
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -51,7 +57,7 @@ class IncomeController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return IncomeResource
+     * @return IncomeResource|JsonResponse
      */
     public function show(Request $request, $id)
     {
@@ -67,9 +73,10 @@ class IncomeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      * @param  $id
-     * @return IncomeResource
+     * @return IncomeResource|JsonResponse
+     * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -106,7 +113,8 @@ class IncomeController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
+     * @throws Exception
      */
     public function destroy(Request $request, $id)
     {

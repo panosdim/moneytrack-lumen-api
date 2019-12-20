@@ -1,11 +1,15 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers;
 
 use App\Expense;
 use App\Category;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -13,7 +17,7 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return CategoryResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -23,8 +27,8 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return CategoryResource
+     * @param Request $request
+     * @return CategoryResource|JsonResponse
      */
     public function store(Request $request)
     {
@@ -50,7 +54,7 @@ class CategoryController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return CategoryResource
+     * @return CategoryResource|JsonResponse
      */
     public function show(Request $request, $id)
     {
@@ -66,9 +70,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      * @param  $id
-     * @return CategoryResource
+     * @return CategoryResource|JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -101,7 +105,8 @@ class CategoryController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
+     * @throws Exception
      */
     public function destroy(Request $request, $id)
     {

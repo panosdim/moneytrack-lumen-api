@@ -1,11 +1,16 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Http\Controllers;
 
 use App\Category;
 use App\Expense;
 use App\Http\Resources\ExpenseResource;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class ExpenseController extends Controller
 {
@@ -13,7 +18,7 @@ class ExpenseController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return ExpenseResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -27,8 +32,9 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return ExpenseResource
+     * @param Request $request
+     * @return ExpenseResource|JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
@@ -64,7 +70,7 @@ class ExpenseController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return ExpenseResource
+     * @return ExpenseResource|JsonResponse
      */
     public function show(Request $request, $id)
     {
@@ -80,9 +86,10 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      * @param  $id
-     * @return ExpenseResource
+     * @return ExpenseResource|JsonResponse
+     * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -129,7 +136,8 @@ class ExpenseController extends Controller
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse|Response
+     * @throws Exception
      */
     public function destroy(Request $request, $id)
     {
