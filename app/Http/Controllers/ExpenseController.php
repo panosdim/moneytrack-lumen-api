@@ -58,10 +58,6 @@ class ExpenseController extends Controller
             'date'     => $request->date,
         ]);
 
-        // Increase the count in category
-        $category->count = $category->count + 1;
-        $category->save();
-
         return new ExpenseResource($expense);
     }
 
