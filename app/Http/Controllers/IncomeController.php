@@ -131,5 +131,6 @@ class IncomeController extends Controller
 
     public function __construct()
     {
+        IncomeResource::withoutWrapping();
     }
 }

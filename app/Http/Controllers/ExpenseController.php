@@ -39,9 +39,9 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'amount'   => 'required|numeric',
+            'amount' => 'required|numeric',
             'category' => 'required|numeric|exists:categories,id',
-            'date'     => 'required|date|date_format:Y-m-d',
+            'date' => 'required|date|date_format:Y-m-d',
         ]);
 
         // Check if Category belong to user
@@ -51,11 +51,11 @@ class ExpenseController extends Controller
         }
 
         $expense = Expense::create([
-            'user_id'  => $request->auth->id,
-            'amount'   => $request->amount,
+            'user_id' => $request->auth->id,
+            'amount' => $request->amount,
             'category' => $request->category,
-            'comment'  => $request->comment ? $request->comment : '',
-            'date'     => $request->date,
+            'comment' => $request->comment ? $request->comment : '',
+            'date' => $request->date,
         ]);
 
         return new ExpenseResource($expense);
@@ -90,9 +90,9 @@ class ExpenseController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'amount'   => 'numeric',
+            'amount' => 'numeric',
             'category' => 'numeric|exists:categories,id',
-            'date'     => 'date|date_format:Y-m-d',
+            'date' => 'date|date_format:Y-m-d',
         ]);
 
         // Check if currently authenticated user is the owner of the Expense
@@ -150,5 +150,6 @@ class ExpenseController extends Controller
 
     public function __construct()
     {
+        ExpenseResource::withoutWrapping();
     }
 }

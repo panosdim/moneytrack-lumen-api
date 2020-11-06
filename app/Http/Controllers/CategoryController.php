@@ -131,5 +131,6 @@ class CategoryController extends Controller
 
     public function __construct()
     {
+        CategoryResource::withoutWrapping();
     }
 }
